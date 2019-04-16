@@ -29,7 +29,6 @@ class Engine {
       this.frameTime = .5 - this.frameTime
       this.fps = this.frameCounter * 2
       this.frameCounter = 0
-      config.fpsTag.innerText = `FPS: ${this.fps}`
     }
 
     if(this.update) {

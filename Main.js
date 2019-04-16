@@ -21,6 +21,8 @@ class Main {
       this.mainWindow = null;
     });
 
+    this.mainWindow.show()
+
     // this.mainWindow.webContents.openDevTools()
   }
 

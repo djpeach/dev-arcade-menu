@@ -12,7 +12,9 @@ class Renderer {
     this.canvas.imageSmoothingEnabled = false
     init({
       tileHeight: height / config.rows,
-      tileWidth: width / config.cols
+      tileWidth: width / config.cols,
+      canvasWidth: this.canvas.width,
+      canvasHeight: this.canvas.height
     })
     new Menu(this.ctx)
   }

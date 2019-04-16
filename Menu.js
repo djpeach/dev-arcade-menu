@@ -8,10 +8,18 @@ class Menu {
   constructor(ctx) {
     this.ctx = ctx
     this.engine = new Engine(this.ctx)
+    this.engine.update = this.update
+    this.engine.draw = this.draw
     this.games = []
     this.createGames()
     this.showGames()
-    this.selectedGame = null
+    this.messager = this.engine.messager
+    this.messager.subscribe(this)
+    this.engine.startUp()
+    this.top = 0
+    this.nextTop = 0
+    this.lastGame = config.cols * config.rows
+    this.pagingDirection = -1
   }
 
   createGames() {
@@ -32,16 +40,78 @@ class Menu {
   }
 
   showGames() {
-    this.ctx.fillStyle = 'white'
-    this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10, config.tileWidth - 40, config.tileHeight - 40)
+    if(this.top > this.nextTop) {
+      this.top -= config.tileHeight / config.pagineIncrementPercent
+    } else if (this.top < this.nextTop) {
+      this.top += config.tileHeight / config.pagineIncrementPercent
+    }
+    if (this.selectedGame) {
+      this.ctx.fillStyle = 'white'
+      this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10 + this.top, config.tileWidth - 40, config.tileHeight - 40)
+    }
     this.games.forEach(game => {
-      console.log(game.coords)
       this.ctx.fillStyle = game.backgroundColor
-      this.ctx.fillRect(game.coords.x, game.coords.y, config.tileWidth - 60, config.tileHeight - 60)
+      this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, config.tileHeight - 60)
       this.ctx.fillStyle = 'white'
       this.ctx.font = "30px Arial"
-      this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40)
+      this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top)
     })
+  }
+
+  handleMsg(msg) {
+    switch (msg.type) {
+      case config.messageTypes.keyDown:
+        let curIndex = this.games.indexOf(this.selectedGame)
+          let nextIndex
+        switch(msg.keyCode) {
+          case 87:
+            nextIndex = curIndex - 3 >= 0 ? curIndex - 3 : curIndex
+            if (nextIndex < this.lastGame - (config.cols * config.rows)) {
+              this.lastGame -= 3
+              this.nextTop = this.top + config.tileHeight
+            }
+            this.selectedGame = this.games[nextIndex]
+            break
+          case 83:
+            nextIndex = curIndex + 3 < this.games.length ? curIndex + 3 : curIndex
+            if (nextIndex + 1 > this.lastGame) {
+              this.lastGame += 3
+              this.nextTop = this.top - config.tileHeight
+            }
+            this.selectedGame = this.games[nextIndex]
+            break
+          case 65:
+            if (curIndex % config.cols === 0) {
+              nextIndex = curIndex + 2
+              this.selectedGame = this.games[nextIndex]
+            } else {
+              let nextIndex = curIndex - 1
+              this.selectedGame = this.games[nextIndex]
+            }
+            break
+          case 68:
+            if ((curIndex + 1) % config.cols === 0) {
+              nextIndex = curIndex - 2
+              this.selectedGame = this.games[nextIndex]
+            } else {
+              let nextIndex = curIndex + 1
+              this.selectedGame = this.games[nextIndex]
+            }
+            break
+          case 191:
+            this.selectedGame.execute()
+        }
+    }
+  }
+
+  update = () => {
+
+  }
+
+  draw = () => {
+    this.ctx.fillStyle = 'grey'
+    this.ctx.fillRect(0, 0, config.canvasWidth, config.canvasHeight)
+    this.showGames()
   }
 }
 

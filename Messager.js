@@ -6,7 +6,6 @@ class Messager {
   subscribe(subscriber) {
     if(this.subscribers.indexOf(subscriber) < 0) {
       this.subscribers.push(subscriber)
-      console.log('subscribed')
     }
   }
 
