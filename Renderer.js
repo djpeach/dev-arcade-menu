@@ -9,7 +9,10 @@ class Renderer {
     this.canvas.height = this.sideLength
     this.canvas.width = this.sideLength // square canvas
     this.canvas.imageSmoothingEnabled = false
-    init({})
+    init({
+      tileHeight: this.canvas.height / config.rows,
+      tileWidth: this.canvas.width / config.cols
+    })
     new Menu(this.ctx)
   }
 }

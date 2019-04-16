@@ -1,7 +1,8 @@
 import config from './config'
 import fs     from 'fs'
 import Engine from './Engine'
-import Game   from "./Game";
+import Game   from "./Game"
+import { indexToCoords } from './utils'
 
 class Menu {
   constructor(ctx) {
@@ -9,6 +10,7 @@ class Menu {
     this.engine = new Engine(this.ctx)
     this.games = []
     this.createGames()
+    this.showGames()
   }
 
   createGames() {
@@ -22,6 +24,12 @@ class Menu {
           let metadata = JSON.parse(fs.readFileSync(`${config.gamesDir}${dir}/metadata.json`, 'utf8'))
           this.games.push(new Game(metadata))
         })
+  }
+
+  showGames() {
+    this.games.forEach(game => {
+      console.log(indexToCoords(this.games.indexOf(game)))
+    })
   }
 }
 
