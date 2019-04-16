@@ -23,7 +23,7 @@ class Main {
 
     this.mainWindow.show()
 
-    // this.mainWindow.webContents.openDevTools()
+    this.mainWindow.webContents.openDevTools()
   }
 
   addListeners() {

@@ -33,7 +33,7 @@ class Menu {
         .forEach(dir => {
           let metadata = JSON.parse(fs.readFileSync(`${config.gamesDir}${dir}/metadata.json`, 'utf8'))
           let coords = indexToCoords(i)
-          this.games.push(new Game(metadata, coords))
+          this.games.push(new Game(`${config.gamesDir}${dir}`, metadata, coords))
           i++
         })
     this.selectedGame = this.games[0]
@@ -45,11 +45,18 @@ class Menu {
     } else if (this.top < this.nextTop) {
       this.top += config.tileHeight / config.pagineIncrementPercent
     }
-    if (this.selectedGame) {
+    if (this.games.filter(game => game.depsInstalled).length > 0) {
+      if (this.selectedGame) {
+        this.ctx.fillStyle = 'white'
+        this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10 + this.top, config.tileWidth - 40, config.tileHeight - 40)
+      }
+    } else {
       this.ctx.fillStyle = 'white'
-      this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10 + this.top, config.tileWidth - 40, config.tileHeight - 40)
+      this.ctx.font = '60px Arial'
+      this.ctx.fillText("Loading Menu...", 50, 120)
     }
-    this.games.forEach(game => {
+    this.games.filter(game => game.depsInstalled)
+      .forEach(game => {
       this.ctx.fillStyle = game.backgroundColor
       this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, config.tileHeight - 60)
       this.ctx.fillStyle = 'white'
