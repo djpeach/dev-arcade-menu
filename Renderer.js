@@ -1,4 +1,5 @@
 import config, {init} from './config'
+import Menu           from "./Menu";
 
 class Renderer {
   constructor() {
@@ -9,6 +10,7 @@ class Renderer {
     this.canvas.width = this.sideLength // square canvas
     this.canvas.imageSmoothingEnabled = false
     init({})
+    new Menu(this.ctx)
   }
 }
 
