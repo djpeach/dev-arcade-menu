@@ -2,7 +2,7 @@
   "name": "dev-arcade",
   "version": "0.0.0",
   "description": "An arcade menu for developers",
-  "main": "main.js",
+  "main": "Menu.js",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.3",
@@ -12,7 +12,7 @@
     "electron": "^4.1.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ."
   },
   "author": "Daniel Peach",
   "license": "ISC"
