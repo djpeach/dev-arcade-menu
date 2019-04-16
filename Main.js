@@ -1,7 +1,6 @@
 const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
-const globalShortcut = electron.globalShortcut
 
 let mainWindow = null
 
@@ -21,10 +20,6 @@ class Main {
     this.mainWindow.on('closed', function () {
       this.mainWindow = null;
     });
-
-    globalShortcut.register('/', () => {
-      app.quit()
-    })
 
     // this.mainWindow.webContents.openDevTools()
   }

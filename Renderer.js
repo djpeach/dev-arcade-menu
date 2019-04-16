@@ -5,8 +5,8 @@ class Renderer {
   constructor() {
     this.canvas = document.getElementById('canvas')
     this.ctx = this.canvas.getContext('2d')
-    let height = document.getElementById('canvasBox').clientHeight
-    let width = document.getElementById('canvasBox').clientWidth
+    let height = document.getElementById('canvas').clientHeight
+    let width = document.getElementById('canvas').clientWidth
     this.canvas.height = height
     this.canvas.width = width
     this.canvas.imageSmoothingEnabled = false
