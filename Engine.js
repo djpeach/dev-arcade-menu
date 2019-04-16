@@ -3,16 +3,14 @@ import config from './config'
 import Messager            from './Messager'
 
 class Engine {
-  constructor(onStartUp, ctx) {
+  constructor(ctx) {
     this.ctx = ctx
-    this.onStartUp = onStartUp
     this.fps = 0
     this.messager = new Messager()
     new Input(this.messager)
   }
 
   startUp = () => {
-    this.onStartUp()
     this.lastUpdateTime = new Date().getTime()
     this.frameCounter = 0
     this.frameTime = 0

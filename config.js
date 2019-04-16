@@ -1,4 +1,5 @@
 let config =  {
+  gamesDir: '../dev-arcade-games/',
   messageTypes: {
     keyDown: 'KEY_DOWN',
     keyUp: 'KEY_UP',
