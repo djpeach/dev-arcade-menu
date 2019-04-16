@@ -10,8 +10,8 @@ let config =  {
 }
 
 export const init = (ops) => {
-  this.tileWidth = ops.tileWidth
-  this.tileHeight = ops.tileHeight
+  config.tileWidth = ops.tileWidth
+  config.tileHeight = ops.tileHeight
 }
 
 export default config
