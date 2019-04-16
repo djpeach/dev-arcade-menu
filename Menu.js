@@ -19,7 +19,8 @@ class Menu {
     this.top = 0
     this.nextTop = 0
     this.lastGame = config.cols * config.rows
-    this.pagingDirection = -1
+    this.loadingGame = false
+    this.loadingDots = ""
   }
 
   createGames() {
@@ -40,29 +41,53 @@ class Menu {
   }
 
   showGames() {
-    if(this.top > this.nextTop) {
-      this.top -= config.tileHeight / config.pagineIncrementPercent
-    } else if (this.top < this.nextTop) {
-      this.top += config.tileHeight / config.pagineIncrementPercent
-    }
-    if (this.games.filter(game => game.depsInstalled).length > 0) {
-      if (this.selectedGame) {
-        this.ctx.fillStyle = 'white'
-        this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10 + this.top, config.tileWidth - 40, config.tileHeight - 40)
+    if (this.loadingGame) {
+      this.ctx.fillStyle = 'white'
+      this.ctx.font = "60px Arial"
+      this.ctx.fillText(`Loading Game: ${this.selectedGame.title}${this.loadingDots}`, 50, 120)
+      switch (this.loadingDots.length) {
+        case 0:
+          this.loadingDots = "."
+          break
+        case 1:
+          this.loadingDots = ".."
+          break
+        case 2:
+          this.loadingDots = "..."
+          break
+        case 3:
+          this.loadingDots = ""
+          break
+        default:
+          this.loadingDots = ""
       }
     } else {
-      this.ctx.fillStyle = 'white'
-      this.ctx.font = '60px Arial'
-      this.ctx.fillText("Loading Menu...", 50, 120)
+      if(this.top > this.nextTop) {
+        let topDiff = config.tileHeight / config.pagineIncrementPercent
+        this.top = this.top - topDiff >= this.nextTop ? this.top - topDiff : this.nextTop
+      } else if (this.top < this.nextTop) {
+        let topDiff = config.tileHeight / config.pagineIncrementPercent
+        this.top = this.top + topDiff <= this.nextTop ? this.top + topDiff : this.nextTop
+      }
+      if (this.games.filter(game => game.depsInstalled).length > 0) {
+        if (this.selectedGame) {
+          this.ctx.fillStyle = 'white'
+          this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10 + this.top, config.tileWidth - 40, config.tileHeight - 40)
+        }
+      } else {
+        this.ctx.fillStyle = 'white'
+        this.ctx.font = '60px Arial'
+        this.ctx.fillText("Loading Menu...", 50, 120)
+      }
+      this.games.filter(game => game.depsInstalled)
+          .forEach(game => {
+            this.ctx.fillStyle = game.backgroundColor
+            this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, config.tileHeight - 60)
+            this.ctx.fillStyle = 'white'
+            this.ctx.font = "30px Arial"
+            this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top)
+          })
     }
-    this.games.filter(game => game.depsInstalled)
-      .forEach(game => {
-      this.ctx.fillStyle = game.backgroundColor
-      this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, config.tileHeight - 60)
-      this.ctx.fillStyle = 'white'
-      this.ctx.font = "30px Arial"
-      this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top)
-    })
   }
 
   handleMsg(msg) {
@@ -106,7 +131,8 @@ class Menu {
             }
             break
           case 191:
-            this.selectedGame.execute()
+            this.selectedGame.execute(() => {this.loadingGame = false})
+            this.loadingGame = true
         }
     }
   }

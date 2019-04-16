@@ -23,15 +23,17 @@ class Game {
     })
 
     installation.on('exit', function(code, signal) {
-      console.log(`The installation process exited with code ${code} and signal ${signal}`)
       this.depsInstalled = true
     }.bind(this))
   }
 
-  execute() {
-    console.log(`executing ${this.command} in ${this.dir}`)
-    exec(this.command, {
+  execute(cb) {
+    const execution = exec(this.command, {
       cwd: this.dir
+    })
+
+    execution.on('exit', () => {
+      cb()
     })
   }
 }
