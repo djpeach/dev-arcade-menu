@@ -20,7 +20,7 @@ class Menu {
     this.nextTop = 0
     this.lastGame = config.cols * config.rows
     this.loadingGame = false
-    this.loadingDots = ""
+    this.loadingDots = ". "
     this.framesPassed = 0
   }
 
@@ -55,45 +55,37 @@ class Menu {
         let topDiff = config.tileHeight / config.pagineIncrementPercent
         this.top = this.top + topDiff <= this.nextTop ? this.top + topDiff : this.nextTop
       }
-      if (this.games.filter(game => game.depsInstalled).length > 0) {
+      if (this.games.filter(game => game.depsInstalled).length === this.games.length) {
         this.loadingDots = ""
         if (this.selectedGame) {
           this.ctx.fillStyle = 'white'
           this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10 + this.top, config.tileWidth - 40, config.tileHeight - 40)
         }
+        this.games.filter(game => game.depsInstalled)
+            .forEach(game => {
+              this.ctx.fillStyle = game.backgroundColor
+              this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, config.tileHeight - 60)
+              this.ctx.fillStyle = 'white'
+              this.ctx.font = "30px Arial"
+              this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top)
+            })
       } else {
         this.ctx.fillStyle = 'white'
         this.ctx.font = '60px Arial'
         this.calcLoadingDots()
         this.ctx.fillText(`Loading Menu${this.loadingDots}`, 50, 120, config.canvasWidth - 100)
       }
-      this.games.filter(game => game.depsInstalled)
-          .forEach(game => {
-            this.ctx.fillStyle = game.backgroundColor
-            this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, config.tileHeight - 60)
-            this.ctx.fillStyle = 'white'
-            this.ctx.font = "30px Arial"
-            this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top)
-          })
     }
   }
 
   calcLoadingDots() {
     this.framesPassed++
-    if (this.framesPassed < 30) {
-      this.loadingDots = ""
-    } else if (this.framesPassed > 30 && this.framesPassed < 60) {
-      this.loadingDots = "."
-    } else if (this.framesPassed > 60 && this.framesPassed < 90) {
-      this.loadingDots = ". ."
-    } else if (this.framesPassed > 90 && this.framesPassed < 120) {
-      this.loadingDots = ". . ."
-    } else if (this.framesPassed > 120 && this.framesPassed < 150) {
-      this.loadingDots = ". . . ."
-    } else if (this.framesPassed > 150 && this.framesPassed < 180) {
-      this.loadingDots = ". . . . ."
-    } else if (this.framesPassed > 180) {
-      this.loadingDots = ""
+    if (this.framesPassed % config.loadingDotsDelta === 0) {
+      this.loadingDots = `${this.loadingDots}. `
+    }
+    if (this.framesPassed > (config.loadingDotsDelta * (config.loadingDotsMax - 1) + (config.loadingDotsDelta - 1))) {
+      this.loadingDots = ". "
+      this.framesPassed = 0
     }
   }
 
