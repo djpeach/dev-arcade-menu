@@ -99,7 +99,7 @@ class Menu {
             nextIndex = curIndex - 3 >= 0 ? curIndex - 3 : curIndex
             if (nextIndex < this.lastGame - (config.cols * config.rows)) {
               this.lastGame -= 3
-              this.nextTop = this.top + config.tileHeight
+              this.nextTop = this.nextTop + config.tileHeight
             }
             this.selectedGame = this.games[nextIndex]
             break
@@ -107,7 +107,7 @@ class Menu {
             nextIndex = curIndex + 3 < this.games.length ? curIndex + 3 : curIndex
             if (nextIndex + 1 > this.lastGame) {
               this.lastGame += 3
-              this.nextTop = this.top - config.tileHeight
+              this.nextTop = this.nextTop - config.tileHeight
             }
             this.selectedGame = this.games[nextIndex]
             break
