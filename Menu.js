@@ -21,6 +21,7 @@ class Menu {
     this.lastGame = config.cols * config.rows
     this.loadingGame = false
     this.loadingDots = ""
+    this.framesPassed = 0
   }
 
   createGames() {
@@ -44,23 +45,8 @@ class Menu {
     if (this.loadingGame) {
       this.ctx.fillStyle = 'white'
       this.ctx.font = "60px Arial"
-      this.ctx.fillText(`Loading Game: ${this.selectedGame.title}${this.loadingDots}`, 50, 120)
-      switch (this.loadingDots.length) {
-        case 0:
-          this.loadingDots = "."
-          break
-        case 1:
-          this.loadingDots = ".."
-          break
-        case 2:
-          this.loadingDots = "..."
-          break
-        case 3:
-          this.loadingDots = ""
-          break
-        default:
-          this.loadingDots = ""
-      }
+      this.calcLoadingDots()
+      this.ctx.fillText(`Loading Game: ${this.selectedGame.title}${this.loadingDots}`, 50, 120, config.canvasWidth - 100)
     } else {
       if(this.top > this.nextTop) {
         let topDiff = config.tileHeight / config.pagineIncrementPercent
@@ -70,6 +56,7 @@ class Menu {
         this.top = this.top + topDiff <= this.nextTop ? this.top + topDiff : this.nextTop
       }
       if (this.games.filter(game => game.depsInstalled).length > 0) {
+        this.loadingDots = ""
         if (this.selectedGame) {
           this.ctx.fillStyle = 'white'
           this.ctx.fillRect(this.selectedGame.coords.x - 10, this.selectedGame.coords.y - 10 + this.top, config.tileWidth - 40, config.tileHeight - 40)
@@ -77,7 +64,8 @@ class Menu {
       } else {
         this.ctx.fillStyle = 'white'
         this.ctx.font = '60px Arial'
-        this.ctx.fillText("Loading Menu...", 50, 120)
+        this.calcLoadingDots()
+        this.ctx.fillText(`Loading Menu${this.loadingDots}`, 50, 120, config.canvasWidth - 100)
       }
       this.games.filter(game => game.depsInstalled)
           .forEach(game => {
@@ -87,6 +75,20 @@ class Menu {
             this.ctx.font = "30px Arial"
             this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top)
           })
+    }
+  }
+
+  calcLoadingDots() {
+    this.framesPassed++
+    if (this.framesPassed < 30) {
+      this.loadingDots = " ."
+    }
+    if (this.framesPassed > 30 && this.framesPassed < 60) {
+      this.loadingDots = " . ."
+    } else if (this.framesPassed > 60 && this.framesPassed < 90) {
+      this.loadingDots = " . . ."
+    } else if (this.framesPassed > 90) {
+      this.framesPassed = 0
     }
   }
 
@@ -131,7 +133,10 @@ class Menu {
             }
             break
           case 191:
-            this.selectedGame.execute(() => {this.loadingGame = false})
+            this.selectedGame.execute(() => {
+              this.loadingGame = false
+              this.loadingDots = ""
+            })
             this.loadingGame = true
         }
     }
