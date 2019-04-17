@@ -81,14 +81,19 @@ class Menu {
   calcLoadingDots() {
     this.framesPassed++
     if (this.framesPassed < 30) {
-      this.loadingDots = " ."
-    }
-    if (this.framesPassed > 30 && this.framesPassed < 60) {
-      this.loadingDots = " . ."
+      this.loadingDots = ""
+    } else if (this.framesPassed > 30 && this.framesPassed < 60) {
+      this.loadingDots = "."
     } else if (this.framesPassed > 60 && this.framesPassed < 90) {
-      this.loadingDots = " . . ."
-    } else if (this.framesPassed > 90) {
-      this.framesPassed = 0
+      this.loadingDots = ". ."
+    } else if (this.framesPassed > 90 && this.framesPassed < 120) {
+      this.loadingDots = ". . ."
+    } else if (this.framesPassed > 120 && this.framesPassed < 150) {
+      this.loadingDots = ". . . ."
+    } else if (this.framesPassed > 150 && this.framesPassed < 180) {
+      this.loadingDots = ". . . . ."
+    } else if (this.framesPassed > 180) {
+      this.loadingDots = ""
     }
   }
 
