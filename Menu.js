@@ -18,7 +18,7 @@ class Menu {
     this.engine.startUp()
     this.top = 0
     this.nextTop = 0
-    this.lastGame = config.cols * config.rows
+    this.lastGameIndex = config.cols * config.rows
     this.loadingGame = false
     this.loadingDots = ". "
     this.framesPassed = 0
@@ -90,41 +90,54 @@ class Menu {
   }
 
   handleMsg(msg) {
+    let xOppositeDelta = config.cols - 1
     switch (msg.type) {
       case config.messageTypes.keyDown:
         let curIndex = this.games.indexOf(this.selectedGame)
           let nextIndex
         switch(msg.keyCode) {
-          case 87:
-            nextIndex = curIndex - 3 >= 0 ? curIndex - 3 : curIndex
-            if (nextIndex < this.lastGame - (config.cols * config.rows)) {
-              this.lastGame -= 3
+          case 87: // ^ up
+            nextIndex = curIndex - config.cols >= 0 ? curIndex - config.cols : curIndex
+            if (nextIndex < this.lastGameIndex - (config.cols * config.rows)) {
+              this.lastGameIndex -= config.cols
               this.nextTop = this.nextTop + config.tileHeight
             }
             this.selectedGame = this.games[nextIndex]
             break
-          case 83:
-            nextIndex = curIndex + 3 < this.games.length ? curIndex + 3 : curIndex
-            if (nextIndex + 1 > this.lastGame) {
-              this.lastGame += 3
+          case 83: // \/ down
+            if (curIndex + config.cols < this.games.length) {
+              nextIndex = curIndex + config.cols
+            } else {
+              nextIndex = this.games.length - 1
+            }
+            if (nextIndex + 1 > this.lastGameIndex) {
+              this.lastGameIndex += config.cols
               this.nextTop = this.nextTop - config.tileHeight
             }
             this.selectedGame = this.games[nextIndex]
             break
-          case 65:
+          case 65: // < left
             if (curIndex % config.cols === 0) {
-              nextIndex = curIndex + 2
-              this.selectedGame = this.games[nextIndex]
-            } else {
+              if (curIndex + xOppositeDelta < this.games.length) {
+                nextIndex = curIndex + xOppositeDelta
+                this.selectedGame = this.games[nextIndex]
+              } else {
+                nextIndex = this.games.length - 1
+                this.selectedGame = this.games[nextIndex]
+              }
+            } else if (curIndex - 1 >= 0) {
               let nextIndex = curIndex - 1
               this.selectedGame = this.games[nextIndex]
             }
             break
-          case 68:
+          case 68: // > right
             if ((curIndex + 1) % config.cols === 0) {
-              nextIndex = curIndex - 2
+              nextIndex = curIndex - xOppositeDelta
               this.selectedGame = this.games[nextIndex]
-            } else {
+            } else if (curIndex === this.games.length - 1) {
+              nextIndex = curIndex - (curIndex % config.cols)
+              this.selectedGame = this.games[nextIndex]
+            } else if (curIndex + 1 < this.games.length) {
               let nextIndex = curIndex + 1
               this.selectedGame = this.games[nextIndex]
             }
