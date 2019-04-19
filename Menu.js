@@ -22,6 +22,9 @@ class Menu {
     this.loadingGame = false
     this.loadingDots = ". "
     this.framesPassed = 0
+    this.showingMessage = false
+    this.message = ""
+    this.framesShowedMessage = 0
   }
 
   createGames() {
@@ -35,10 +38,27 @@ class Menu {
         .forEach(dir => {
           let metadata = JSON.parse(fs.readFileSync(`${config.gamesDir}${dir}/metadata.json`, 'utf8'))
           let coords = indexToCoords(i)
-          this.games.push(new Game(`${config.gamesDir}${dir}`, metadata, coords))
+          let logo = null
+          if (metadata.logo) {
+            logo = document.createElement('img')
+            logo.src = `${config.gamesDir}${dir}/${metadata.logo}`
+          }
+          this.games.push(new Game(`${config.gamesDir}${dir}`, metadata, coords, logo))
           i++
         })
     this.selectedGame = this.games[0]
+  }
+
+  showMessage() {
+    this.ctx.fillStyle = 'white'
+    this.ctx.font = "60px Arial"
+    this.ctx.fillText(this.message, 50, 120, config.canvasWidth - 100)
+    this.framesShowedMessage++
+    if (this.framesShowedMessage > 100) {
+      this.showingMessage = false
+      this.framesShowedMessage = 0
+      this.message = ""
+    }
   }
 
   showGames() {
@@ -65,9 +85,18 @@ class Menu {
             .forEach(game => {
               this.ctx.fillStyle = game.backgroundColor
               this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, config.tileHeight - 60)
+              if (game.logo) {
+                let logoHeight = game.logo.height
+                let logoWidth = game.logo.width
+                let drawnHeight = (config.tileWidth - 60) * logoHeight / logoWidth
+                this.ctx.imageSmoothingEnabled = false
+                this.ctx.drawImage(game.logo, game.coords.x, game.coords.y + this.top + (config.tileHeight - drawnHeight) - 60, (config.tileWidth - 60), drawnHeight)
+              }
               this.ctx.fillStyle = 'white'
+              this.ctx.fillRect(game.coords.x, game.coords.y + this.top, config.tileWidth - 60, 50)
+              this.ctx.fillStyle = 'black'
               this.ctx.font = "30px Arial"
-              this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top)
+              this.ctx.fillText(game.title, game.coords.x + 10, game.coords.y + 40 + this.top, config.tileWidth - 90)
             })
       } else {
         this.ctx.fillStyle = 'white'
@@ -142,12 +171,37 @@ class Menu {
               this.selectedGame = this.games[nextIndex]
             }
             break
+          case 49:
+            if (!this.selectedGame.start1) {
+              this.showingMessage = true
+              this.message = `${this.selectedGame.title} does not have a single-player mode`
+            } else {
+              this.selectedGame.execute(1,() => {
+                this.loadingGame = false
+                this.loadingDots = ""
+              })
+              this.loadingGame = true
+            }
+            break
+          case 50:
+            if (!this.selectedGame.start2) {
+              this.showingMessage = true
+              this.message = `${this.selectedGame.title} does not have a 2-player mode`
+            } else {
+              this.selectedGame.execute(2,() => {
+                this.loadingGame = false
+                this.loadingDots = ""
+              })
+              this.loadingGame = true
+            }
+            break
           case 191:
-            this.selectedGame.execute(() => {
+            this.selectedGame.execute('/', () => {
               this.loadingGame = false
               this.loadingDots = ""
             })
             this.loadingGame = true
+            break
         }
     }
   }
@@ -159,7 +213,11 @@ class Menu {
   draw = () => {
     this.ctx.fillStyle = 'grey'
     this.ctx.fillRect(0, 0, config.canvasWidth, config.canvasHeight)
-    this.showGames()
+    if(this.showingMessage) {
+      this.showMessage()
+    } else {
+      this.showGames()
+    }
   }
 }
 
