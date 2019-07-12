@@ -19,6 +19,7 @@ add_executable(dev-arcade-menu
                 Menu.hpp Menu.cpp
                 IntroState.hpp IntroState.cpp
                 BrowsingState.hpp BrowsingState.cpp
+                GameDTO.hpp GameDTO.cpp
                 )
 
 target_link_libraries(dev-arcade-menu sfml-graphics sfml-audio )
