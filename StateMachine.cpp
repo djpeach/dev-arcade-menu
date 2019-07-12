@@ -3,8 +3,8 @@
 namespace peachgames {
   void StateMachine::addState(StateRef newState, bool isReplacing) {
     isAdding = true;
-    isReplacing = isReplacing;
-    newState = std::move(newState);
+    this->isReplacing = isReplacing;
+    this->newState = std::move(newState);
   }
 
   void StateMachine::removeState() {

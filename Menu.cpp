@@ -5,7 +5,7 @@ namespace peachgames {
 
   Menu::Menu() {
     engine->window.create(sf::VideoMode::getDesktopMode(), "", sf::Style::Fullscreen);
-    engine->states.addState(StateRef(new IntroState(engine)), true);
+    engine->states.addState(StateRef(new IntroState(engine)));
 
     run();
   }

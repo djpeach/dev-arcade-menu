@@ -8,7 +8,7 @@ namespace peachgames {
 
   class IntroState : public State {
   public:
-    IntroState(EngineRef data);
+    IntroState(EngineRef engineRef);
 
     void init();
 

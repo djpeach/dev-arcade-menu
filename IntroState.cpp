@@ -4,7 +4,7 @@
 #include "DEFINITIONS.hpp"
 
 namespace peachgames {
-  IntroState::IntroState(EngineRef data) : engine(data) {}
+  IntroState::IntroState(EngineRef engineRef) : engine(engineRef) {}
 
   void IntroState::init() {
     engine->assets.loadTexture("Intro Background", "assets/images/introBackground.png");
@@ -24,7 +24,7 @@ namespace peachgames {
           break;
         case sf::Event::KeyPressed:
           switch (event.key.code) {
-            case KILL_SWITCH:
+            case sf::Keyboard::Num1:
               engine->window.close();
               break;
             default:
@@ -37,7 +37,7 @@ namespace peachgames {
   }
 
   void IntroState::update(float dt) {
-    if (clock.getElapsedTime().asSeconds() > INTRO_SHOW_TIME) {
+    if (this->clock.getElapsedTime().asSeconds() > INTRO_SHOW_TIME) {
       // go to menu
     }
 
@@ -45,7 +45,7 @@ namespace peachgames {
 
   void IntroState::draw(float dt) {
     engine->window.clear();
-    engine->window.draw(background);
+    engine->window.draw(this->background);
     engine->window.display();
   }
 
