@@ -13,7 +13,7 @@ namespace peachgames {
   void Menu::run() {
     float newTime, frameTime, interpoloation;
 
-    float currentTime = =clock.getElapsedTime().asSeconds();
+    float currentTime = clock.getElapsedTime().asSeconds();
     float accumulator = 0.0f;
 
     while (engine->window.isOpen()) {

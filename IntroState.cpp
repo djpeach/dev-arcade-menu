@@ -1,0 +1,52 @@
+#include <sstream>
+#include <iostream>
+#include "IntroState.hpp"
+#include "DEFINITIONS.hpp"
+
+namespace peachgames {
+  IntroState::IntroState(EngineRef data) : engine(data) {}
+
+  void IntroState::init() {
+    engine->assets.loadTexture("Intro Background", "assets/images/introBackground.png");
+
+    background.setTexture(engine->assets.getTexture("Intro Background"));
+
+    sf::Vector2f targetBackgroundSize = engine->window.getView().getSize();
+    background.setScale(targetBackgroundSize.x / background.getLocalBounds().width, targetBackgroundSize.y / background.getLocalBounds().height);
+  }
+
+  void IntroState::handleInput() {
+    sf::Event event;
+    while(engine->window.pollEvent(event)) {
+      switch(event.type) {
+        case sf::Event::Closed:
+          engine->window.close();
+          break;
+        case sf::Event::KeyPressed:
+          switch (event.key.code) {
+            case KILL_SWITCH:
+              engine->window.close();
+              break;
+            default:
+              break;
+          }
+        default:
+          break;
+      }
+    }
+  }
+
+  void IntroState::update(float dt) {
+    if (clock.getElapsedTime().asSeconds() > INTRO_SHOW_TIME) {
+      // go to menu
+    }
+
+  }
+
+  void IntroState::draw(float dt) {
+    engine->window.clear();
+    engine->window.draw(background);
+    engine->window.display();
+  }
+
+}

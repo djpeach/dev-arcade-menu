@@ -3,6 +3,8 @@
 #include <memory>
 
 #include <SFML/Graphics.hpp>
+#include "StateMachine.hpp"
+#include "AssetManager.hpp"
 
 namespace peachgames {
 
@@ -24,6 +26,6 @@ namespace peachgames {
     EngineRef engine = std::make_shared<Engine>();
 
     void run();
-  }
+  };
 
 }
