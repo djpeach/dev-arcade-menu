@@ -38,7 +38,7 @@ namespace peachgames {
 
   void IntroState::update(float dt) {
     if (this->clock.getElapsedTime().asSeconds() > INTRO_SHOW_TIME) {
-      // go to menu
+      engine.state.addState(StateRef(new BrowsingState(engine)));
     }
 
   }
