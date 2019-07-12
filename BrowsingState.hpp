@@ -1,6 +1,7 @@
 #pragma once
 
 #include "State.hpp"
+#include "Menu.hpp"
 #include "GameDTO.hpp"
 
 namespace peachgames {

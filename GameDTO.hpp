@@ -2,9 +2,9 @@
 
 namespace peachgames {
 
-  class Game {
+  class GameDTO {
   public:
-    Game();
+    GameDTO();
   };
 
 }

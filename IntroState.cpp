@@ -1,6 +1,7 @@
 #include <sstream>
 #include <iostream>
-#include "IntroState.hpp"
+#include "IntroState.hpp">
+#include "BrowsingState.hpp"
 #include "DEFINITIONS.hpp"
 
 namespace peachgames {
@@ -38,7 +39,7 @@ namespace peachgames {
 
   void IntroState::update(float dt) {
     if (this->clock.getElapsedTime().asSeconds() > INTRO_SHOW_TIME) {
-      engine.state.addState(StateRef(new BrowsingState(engine)));
+      engine->states.addState(StateRef(new BrowsingState(engine)));
     }
 
   }
