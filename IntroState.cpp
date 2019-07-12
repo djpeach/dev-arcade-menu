@@ -1,6 +1,6 @@
 #include <sstream>
 #include <iostream>
-#include "IntroState.hpp">
+#include "IntroState.hpp"
 #include "BrowsingState.hpp"
 #include "DEFINITIONS.hpp"
 
