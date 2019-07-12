@@ -17,6 +17,7 @@ add_executable(dev-arcade-menu
                 AssetManager.hpp AssetManager.cpp
                 StateMachine.hpp StateMachine.cpp
                 Menu.hpp Menu.cpp
+                IntroState.hpp IntroState.cpp
                 )
 
 target_link_libraries(dev-arcade-menu sfml-graphics sfml-audio )
